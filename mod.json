@@ -1,5 +1,5 @@
 {
-"geode": "5.9.0",
+	"geode": "5.9.0",
 	"gd": {
 		"win": "2.2081",
 		"android": "2.2081",
@@ -10,17 +10,17 @@
 	"name": "Fast Wave Rotation",
 	"version": "v1.0.0",
 	"developer": "YourName",
-	"description": "Ускоряет поворот иконки вейва вверх и вниз. Скорость настраивается.",
+	"description": "Makes the wave icon turn up and down faster. Visual only, the hitbox is not changed.",
 	"settings": {
 		"enabled": {
 			"type": "bool",
-			"name": "Включить мод",
+			"name": "Enable mod",
 			"default": true
 		},
 		"rotation-speed": {
 			"type": "float",
-			"name": "Скорость поворота",
-			"description": "Чем больше значение, тем быстрее иконка поворачивается. На максимуме поворот мгновенный.",
+			"name": "Rotation speed",
+			"description": "Higher value means a faster turn. At the maximum (10) the turn is instant.",
 			"default": 3.0,
 			"min": 0.5,
 			"max": 10.0,

@@ -1,54 +1,70 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/PlayerObject.hpp>
 #include <algorithm>
+#include <cmath>
 
 using namespace geode::prelude;
 
 class $modify(FastWavePlayer, PlayerObject) {
 	struct Fields {
-		float m_currentAngle = 0.f;
-		bool m_wasDart = false;
+		float m_visualAngle = 0.f;
+		bool m_active = false;
 	};
+
+	// Rotates only the icon sprites. The PlayerObject itself (and its hitbox)
+	// is never touched.
+	void setIconOffset(float offset) {
+		if (m_iconSprite) m_iconSprite->setRotation(offset);
+		if (m_iconGlow) m_iconGlow->setRotation(offset);
+	}
 
 	void update(float dt) {
 		PlayerObject::update(dt);
 
-		auto mod = Mod::get();
-		if (!mod->getSettingValue<bool>("enabled")) return;
-
 		auto f = m_fields.self();
+		auto mod = Mod::get();
 
-		// только в режиме вейва
-		if (!m_isDart) {
-			f->m_wasDart = false;
+		// Leaving wave mode or mod disabled: restore the icon
+		if (!m_isDart || !mod->getSettingValue<bool>("enabled")) {
+			if (f->m_active) {
+				setIconOffset(0.f);
+				f->m_active = false;
+			}
 			return;
 		}
 
-		// направление определяем по вертикальной скорости
+		// Direction from vertical velocity
 		bool goingUp = m_yVelocity > 0.0;
 		if (m_isUpsideDown) goingUp = !goingUp;
 
-		// в cocos2d положительный угол = по часовой стрелке
-		// вверх = -45°, вниз = +45° (для мини-вейва угол круче)
 		float maxAngle = (m_vehicleSize < 1.f) ? 60.f : 45.f;
 		float target = goingUp ? -maxAngle : maxAngle;
 		if (m_isUpsideDown) target = -target;
 
-		if (!f->m_wasDart) {
-			f->m_currentAngle = this->getRotation();
-			f->m_wasDart = true;
+		// Start from the angle the game currently shows
+		if (!f->m_active) {
+			f->m_visualAngle = this->getRotation();
+			f->m_active = true;
 		}
 
 		float speed = static_cast<float>(mod->getSettingValue<double>("rotation-speed"));
 
 		if (speed >= 10.f) {
-			f->m_currentAngle = target; // мгновенно
+			// instant turn
+			f->m_visualAngle = target;
 		} else {
-			// чем выше speed, тем быстрее приближаемся к целевому углу
-			float t = std::min(1.f, dt * speed * 20.f);
-			f->m_currentAngle += (target - f->m_currentAngle) * t;
+			// speed 1.0 = 360 degrees per second
+			float maxStep = speed * 360.f * dt;
+			float diff = target - f->m_visualAngle;
+			if (std::fabs(diff) <= maxStep) {
+				f->m_visualAngle = target;
+			} else {
+				f->m_visualAngle += (diff > 0.f ? maxStep : -maxStep);
+			}
 		}
 
-		this->setRotation(f->m_currentAngle);
+		// Offset relative to the object's own rotation, so the sprite
+		// ends up showing exactly m_visualAngle
+		setIconOffset(f->m_visualAngle - this->getRotation());
 	}
 };
