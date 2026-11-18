@@ -1,0 +1,33 @@
+{
+	"geode": "4.0.0",
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "yourname.fast-wave",
+	"name": "Fast Wave Rotation",
+	"version": "v1.0.0",
+	"developer": "YourName",
+	"description": "Ускоряет поворот иконки вейва вверх и вниз. Скорость настраивается.",
+	"settings": {
+		"enabled": {
+			"type": "bool",
+			"name": "Включить мод",
+			"default": true
+		},
+		"rotation-speed": {
+			"type": "float",
+			"name": "Скорость поворота",
+			"description": "Чем больше значение, тем быстрее иконка поворачивается. На максимуме поворот мгновенный.",
+			"default": 3.0,
+			"min": 0.5,
+			"max": 10.0,
+			"control": {
+				"slider": true,
+				"input": true
+			}
+		}
+	}
+}
