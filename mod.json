@@ -8,7 +8,7 @@
 	},
 	"id": "yourname.fast-wave",
 	"name": "Fast Wave Rotation",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "YourName",
 	"description": "Makes the wave icon turn up and down faster. Visual only, the hitbox is not changed.",
 	"settings": {
@@ -20,9 +20,9 @@
 		"rotation-speed": {
 			"type": "float",
 			"name": "Rotation speed",
-			"description": "Higher value means a faster turn. At the maximum (10) the turn is instant.",
-			"default": 3.0,
-			"min": 0.5,
+			"description": "0 = vanilla (no change). Higher = faster turn. 10 = instant turn.",
+			"default": 5.0,
+			"min": 0.0,
 			"max": 10.0,
 			"control": {
 				"slider": true,
