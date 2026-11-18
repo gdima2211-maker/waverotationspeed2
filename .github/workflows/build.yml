@@ -26,6 +26,7 @@ jobs:
           bindings-ref: main
           combine: true
           target: ${{ matrix.config.target }}
+          configure-args: -DCMAKE_CXX_FLAGS=-DFMT_USE_CONSTEVAL=0
 
   package:
     name: Package builds
